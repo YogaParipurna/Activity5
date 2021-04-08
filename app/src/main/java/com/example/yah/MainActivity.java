@@ -34,10 +34,28 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    public int validasiData(){
+        String emailActive = "admin@gmail.com";
+        String passActive = "123";
+        nama = edemail.getText().toString();
+        password = edpasswords.getText().toString();
+
+        if(emailActive.equals(nama) && passActive.equals(password)){ // BENAR SEMUA
+            return 1;
+        }
+        else if(emailActive.equals(nama) && !passActive.equals(password)){ // SALAH PASS
+            return 2;
+        }
+        else if(!emailActive.equals(nama) && passActive.equals(password)){ // SALAH EMAIL
+            return 3;
+        }
+        return 0;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         btnLogin = findViewById(R.id.btSignin);
 
         edemail = findViewById(R.id.edEmail);
@@ -54,39 +72,38 @@ public class MainActivity extends AppCompatActivity {
 
                 password = edpasswords.getText().toString();
 
-                String email = "admin@gmail.com";
-
-                String pass = "123";
-
-                if(nama.isEmpty() || password.isEmpty()) {
+                if(nama.isEmpty() || password.isEmpty()){
                     Toast t = Toast.makeText(getApplicationContext(),
-                            "Email dan Password Wajib diisi",
+                            "Email / Password tidak terisi !",
                             Toast.LENGTH_LONG);
-
                     t.show();
-                }else {
-
-                    if (nama.equals(email) && password.equals(pass)) {
+                }else{
+                    if(validasiData() == 1){
                         Toast t = Toast.makeText(getApplicationContext(),
-                                ":Login Sukses",
+                                "Sukses !",
                                 Toast.LENGTH_LONG);
                         t.show();
-
                         Bundle b = new Bundle();
+                        b.putString("email",nama.trim());
+                        b.putString("pass",password.trim());
 
-                        b.putString("a", nama.trim());
-
-                        b.putString("b", password.trim());
-
-                        Intent i = new Intent(getApplicationContext(), ActivityHasil.class);
-
+                        Intent i = new Intent(getApplicationContext(),HomeActivity.class);
                         i.putExtras(b);
-
                         startActivity(i);
-                    }else{
+                    }else if(validasiData() == 0){
                         Toast t = Toast.makeText(getApplicationContext(),
-                                "Login gagal", Toast.LENGTH_LONG);
-
+                                "Email dan Password anda Salah !\n Silahkan Coba lagi",
+                                Toast.LENGTH_LONG);
+                        t.show();
+                    }else if(validasiData() == 2){
+                        Toast t = Toast.makeText(getApplicationContext(),
+                                "Password anda Salah !\n Silahkan Coba lagi",
+                                Toast.LENGTH_LONG);
+                        t.show();
+                    }else if(validasiData() == 3) {
+                        Toast t = Toast.makeText(getApplicationContext(),
+                                "Email anda Salah !\n Silahkan Coba lagi",
+                                Toast.LENGTH_LONG);
                         t.show();
                     }
                 }
